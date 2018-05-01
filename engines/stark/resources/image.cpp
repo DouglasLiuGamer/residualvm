@@ -27,6 +27,9 @@
 #include "engines/stark/formats/xrc.h"
 #include "engines/stark/services/archiveloader.h"
 #include "engines/stark/services/services.h"
+#include "engines/stark/visual/effects/bubbles.h"
+#include "engines/stark/visual/effects/fireflies.h"
+#include "engines/stark/visual/effects/fish.h"
 #include "engines/stark/visual/image.h"
 #include "engines/stark/visual/text.h"
 
@@ -217,9 +220,20 @@ void ImageText::initVisual() {
 		return; // The visual is already there
 	}
 
-	if (_text.hasPrefix("GFX_")) {
-		warning("TODO: Implement '%s'", _text.c_str());
-		_visual = nullptr;
+	if (_text.hasPrefix("GFX_Bubbles")) {
+		VisualEffectBubbles *bubbles = new VisualEffectBubbles(StarkGfx, _size);
+		bubbles->setParams(_text);
+		_visual = bubbles;
+	} else if (_text.hasPrefix("GFX_FireFlies")) {
+		VisualEffectFireFlies *fireFlies = new VisualEffectFireFlies(StarkGfx, _size);
+		fireFlies->setParams(_text);
+		_visual = fireFlies;
+	} else if (_text.hasPrefix("GFX_Fish")) {
+		VisualEffectFish *fish = new VisualEffectFish(StarkGfx, _size);
+		fish->setParams(_text);
+		_visual = fish;
+	} else if (_text.hasPrefix("GFX_")) {
+		error("Unknown effect '%s'", _text.c_str());
 	} else {
 		VisualText *text = new VisualText(StarkGfx);
 		text->setText(_text);
